@@ -15,12 +15,22 @@ int main()
 	window.create(sf::VideoMode(200.0f * screenScalingFactor, 200.0f * screenScalingFactor), "SFML works!");
 	platform.setIcon(window.getSystemHandle());
 
-	sf::CircleShape shape(window.getSize().x / 2);
-	shape.setFillColor(sf::Color::White);
+	// sf::CircleShape shape(window.getSize().x / 2);
+	// shape.setFillColor(sf::Color::White);
 
-	sf::Texture shapeTexture;
-	shapeTexture.loadFromFile("content/sfml.png");
-	shape.setTexture(&shapeTexture);
+	// sf::Texture shapeTexture;
+	// shapeTexture.loadFromFile("content/sfml.png");
+	// shape.setTexture(&shapeTexture);
+
+	std::vector<sf::RectangleShape> rectangles;
+
+	for (int i = 0; i < 10; ++i)
+	{
+		sf::RectangleShape shape(sf::Vector2f(1, window.getSize().y - i * 25));
+		shape.setPosition(i * 10, 0);
+		rectangles.insert(rectangles.begin(), shape);
+	}
+	// sf::RectangleShape shape(sf::Vector2f(2, window.getSize().x));
 
 	sf::Event event;
 
@@ -33,7 +43,9 @@ int main()
 		}
 
 		window.clear();
-		window.draw(shape);
+		// window.draw(shape);
+		for (const auto& shape : rectangles)
+			window.draw(shape);
 		window.display();
 	}
 
