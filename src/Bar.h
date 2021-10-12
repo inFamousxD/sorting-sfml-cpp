@@ -12,6 +12,8 @@ public:
 	int getHeight();
 	void setHeight(int height);
 
+	void hightlight(bool trigger);
+
 private:
 	int height;
 	int width;

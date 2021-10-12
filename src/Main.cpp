@@ -50,9 +50,8 @@ void render(Bar* bars[], int barsCount, sf::RenderWindow& window)
 	}
 	window.clear(sf::Color(50, 50, 50));
 	for (int i = 0; i < barsCount; ++i)
-	{
+		// {
 		window.draw(sf::RectangleShape(*(bars[i]->getRectangleShape())));
-	}
 	window.display();
 }
 

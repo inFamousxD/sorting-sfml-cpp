@@ -18,8 +18,8 @@ Bar::Bar(int height, int width, int delta_y)
 
 	this->rectangle = new sf::RectangleShape(sf::Vector2f(width, height * delta_y));
 	this->rectangle->setOrigin(0, delta_y * height);
-	this->rectangle->setFillColor(sf::Color(25, 255, 25));
-	this->rectangle->setOutlineThickness(0.5f);
+	this->rectangle->setFillColor(sf::Color(25, 255, 255));
+	this->rectangle->setOutlineThickness(1.0f);
 	this->rectangle->setOutlineColor(sf::Color::Black);
 }
 
@@ -43,4 +43,12 @@ Bar::~Bar()
 sf::RectangleShape* Bar::getRectangleShape()
 {
 	return this->rectangle;
+}
+
+void Bar::hightlight(bool trigger)
+{
+	if (trigger)
+		this->rectangle->setFillColor(sf::Color(255, 255, 25));
+	else
+		this->rectangle->setFillColor(sf::Color(25, 255, 255));
 }
