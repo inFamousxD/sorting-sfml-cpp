@@ -13,17 +13,17 @@
 
 bool running = true;
 
+int quickSortPartition(int* a, int lowI, int highI);
 void swap(int* a, int i, int j);
+void merge(int* arr, int l, int m, int r);
 void shuffle(int* a, int arraySize);
-void render(Bar* bars[], int barsCount, sf::RenderWindow& window);
+void mergeSort(int* arr, int l, int r);
+void quickSort(int* numbers, int lowI, int highI);
 void bubbleSort(int* arr, int numCount);
+void insertionSort(int* arr, int numCount);
+void render(Bar* bars[], int barsCount, sf::RenderWindow& window);
 void update(Bar* bars[], int* numbers, int numCount);
 void cpy_arr(Bar* src[], Bar* dest[], int start, int end);
-void merge(int* arr, int l, int m, int r);
-void mergeSort(int* arr, int l, int r);
-int quickSortPartition(int* a, int lowI, int highI);
-void quickSort(int* numbers, int lowI, int highI);
-void insertionSort(int* arr, int numCount);
 
 void swap(int* a, int i, int j)
 {
