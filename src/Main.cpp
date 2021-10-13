@@ -24,6 +24,15 @@ void insertionSort(int* arr, int numCount);
 void render(Bar* bars[], int barsCount, sf::RenderWindow& window);
 void update(Bar* bars[], int* numbers, int numCount);
 void cpy_arr(Bar* src[], Bar* dest[], int start, int end);
+void cocktailSort(int* arr, int numCount);
+void stoogeSort(int* arr, int l, int h);
+void cycleSort(int* arr, int n);
+void oddEvenSort(int* arr, int n);
+void heapify(int* arr, int n, int i);
+void heapSort(int* arr, int n);
+int getMax(int* arr, int n);
+void countSort(int* arr, int n, int exp);
+void radixsort(int* arr, int n);
 
 void swap(int* a, int i, int j)
 {
@@ -198,6 +207,224 @@ void bubbleSort(int* arr, int numCount)
 	} while (!swapped);
 }
 
+void cocktailSort(int* a, int n)
+{
+	bool swapped = true;
+	int start = 0;
+	int end = n - 1;
+
+	while (swapped)
+	{
+		swapped = false;
+
+		for (int i = start; i < end; ++i)
+		{
+			if (a[i] > a[i + 1])
+			{
+				swap(a, i, i + 1);
+				usleep(SLEEP);
+				swapped = true;
+			}
+		}
+		if (!swapped)
+			break;
+		swapped = false;
+		--end;
+		for (int i = end - 1; i >= start; --i)
+		{
+			if (a[i] > a[i + 1])
+			{
+				swap(a, i, i + 1);
+				usleep(SLEEP);
+				swapped = true;
+			}
+		}
+		++start;
+	}
+}
+
+void stoogeSort(int* arr, int l, int h)
+{
+	if (l >= h)
+		return;
+
+	if (arr[l] > arr[h])
+	{
+		swap(arr, l, h);
+		usleep(SLEEP);
+	}
+
+	if (h - l + 1 > 2)
+	{
+		int t = (h - l + 1) / 3;
+
+		stoogeSort(arr, l, h - t);
+		stoogeSort(arr, l + t, h);
+		stoogeSort(arr, l, h - t);
+	}
+}
+
+void cycleSort(int* arr, int n)
+{
+	int writes = 0;
+
+	for (int cycle_start = 0; cycle_start <= n - 2; cycle_start++)
+	{
+		int item = arr[cycle_start];
+
+		int pos = cycle_start;
+		for (int i = cycle_start + 1; i < n; i++)
+			if (arr[i] < item)
+				pos++;
+
+		if (pos == cycle_start)
+			continue;
+
+		while (item == arr[pos])
+			pos += 1;
+
+		if (pos != cycle_start)
+		{
+			int temp = item;
+			item = arr[pos];
+			arr[pos] = temp;
+			usleep(SLEEP_HIGH * 10);
+			writes++;
+		}
+
+		while (pos != cycle_start)
+		{
+			pos = cycle_start;
+
+			for (int i = cycle_start + 1; i < n; i++)
+				if (arr[i] < item)
+					pos += 1;
+
+			while (item == arr[pos])
+				pos += 1;
+
+			if (item != arr[pos])
+			{
+				int temp = item;
+				item = arr[pos];
+				arr[pos] = temp;
+				usleep(SLEEP_HIGH * 10);
+				writes++;
+			}
+		}
+	}
+}
+
+void oddEvenSort(int* arr, int n)
+{
+	bool isSorted = false;
+
+	while (!isSorted)
+	{
+		isSorted = true;
+
+		for (int i = 1; i <= n - 2; i = i + 2)
+		{
+			if (arr[i] > arr[i + 1])
+			{
+				swap(arr, i, i + 1);
+				usleep(SLEEP);
+				isSorted = false;
+			}
+		}
+
+		for (int i = 0; i <= n - 2; i = i + 2)
+		{
+			if (arr[i] > arr[i + 1])
+			{
+				swap(arr, i, i + 1);
+				usleep(SLEEP);
+				isSorted = false;
+			}
+		}
+	}
+
+	return;
+}
+
+void heapify(int* arr, int n, int i)
+{
+	int largest = i;
+	int l = 2 * i + 1;
+	int r = 2 * i + 2;
+
+	if (l < n && arr[l] > arr[largest])
+		largest = l;
+
+	if (r < n && arr[r] > arr[largest])
+		largest = r;
+
+	if (largest != i)
+	{
+		swap(arr, i, largest);
+		usleep(SLEEP_HIGH * 2);
+		heapify(arr, n, largest);
+	}
+}
+
+void heapSort(int* arr, int n)
+{
+	usleep(SLEEP_HIGH * 200);
+	for (int i = n / 2 - 1; i >= 0; i--)
+		heapify(arr, n, i);
+
+	for (int i = n - 1; i > 0; i--)
+	{
+		swap(arr, 0, i);
+		usleep(SLEEP_HIGH);
+
+		heapify(arr, i, 0);
+	}
+}
+
+int getMax(int* arr, int n)
+{
+	int mx = arr[0];
+	for (int i = 1; i < n; i++)
+		if (arr[i] > mx)
+			mx = arr[i];
+	return mx;
+}
+
+void countSort(int* arr, int n, int exp)
+{
+	int* output = new int[n];
+	int i, count[10] = { 0 };
+
+	for (i = 0; i < n; i++)
+		count[(arr[i] / exp) % 10]++;
+
+	for (i = 1; i < 10; i++)
+		count[i] += count[i - 1];
+
+	for (i = n - 1; i >= 0; i--)
+	{
+		output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+		count[(arr[i] / exp) % 10]--;
+	}
+
+	for (i = 0; i < n; i++)
+	{
+		arr[i] = output[i];
+		usleep(SLEEP_HIGH);
+	}
+}
+
+void radixsort(int* arr, int n)
+{
+	int m = getMax(arr, n);
+
+	for (int exp = 1; m / exp > 0; exp *= 10)
+	{
+		countSort(arr, n, exp);
+	}
+}
+
 void update(Bar* bars[], int* numbers, int numCount)
 {
 	for (int i = 0; i < numCount; ++i)
@@ -221,7 +448,7 @@ int main()
 
 	for (int i = 0; i < BARS; ++i)
 	{
-		bars[i] = new Bar(dx, 2, dy);
+		bars[i] = new Bar(dx, 1, dy);
 		heights[i] = window.getSize().y - rand() % (window.getSize().y - window.getSize().y / 10);
 	}
 
@@ -234,9 +461,15 @@ int main()
 	}
 
 	// std::thread sort(&bubbleSort, heights, BARS);
-	std::thread sort(&quickSort, heights, 0, BARS - 1);
+	// std::thread sort(&quickSort, heights, 0, BARS - 1);
 	// std::thread sort(&mergeSort, heights, 0, BARS - 1);
 	// std::thread sort(&insertionSort, heights, BARS);
+	// std::thread sort(&cocktailSort, heights, BARS);
+	// std::thread sort(&stoogeSort, heights, 0, BARS - 1);
+	// std::thread sort(&cycleSort, heights, BARS);
+	// std::thread sort(&oddEvenSort, heights, BARS);
+	std::thread sort(&heapSort, heights, BARS);
+	// std::thread sort(&radixsort, heights, BARS);
 
 	sf::Event event;
 
