@@ -33,6 +33,10 @@ void heapSort(int* arr, int n);
 int getMax(int* arr, int n);
 void countSort(int* arr, int n, int exp);
 void radixsort(int* arr, int n);
+int shellSort(int* arr, int n);
+bool isSorted(int* a, int n);
+void shuffleBogoSort(int* a, int n);
+void bogosort(int* a, int n);
 
 void swap(int* a, int i, int j)
 {
@@ -425,6 +429,44 @@ void radixsort(int* arr, int n)
 	}
 }
 
+int shellSort(int* arr, int n)
+{
+	for (int gap = n / 2; gap > 0; gap /= 2)
+	{
+		for (int i = gap; i < n; i += 1)
+		{
+			int temp = arr[i];
+			int j;
+			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
+				arr[j] = arr[j - gap];
+
+			arr[j] = temp;
+			usleep(SLEEP_HIGH);
+		}
+	}
+	return 0;
+}
+
+bool isSorted(int* a, int n)
+{
+	while (--n > 1)
+		if (a[n] < a[n - 1])
+			return false;
+	return true;
+}
+
+void shuffleBogoSort(int* a, int n)
+{
+	for (int i = 0; i < n; i++)
+		swap(a, i, rand() % n);
+}
+
+void bogosort(int* a, int n)
+{
+	while (!isSorted(a, n))
+		shuffleBogoSort(a, n);
+}
+
 void update(Bar* bars[], int* numbers, int numCount)
 {
 	for (int i = 0; i < numCount; ++i)
@@ -468,8 +510,10 @@ int main()
 	// std::thread sort(&stoogeSort, heights, 0, BARS - 1);
 	// std::thread sort(&cycleSort, heights, BARS);
 	// std::thread sort(&oddEvenSort, heights, BARS);
-	std::thread sort(&heapSort, heights, BARS);
+	// std::thread sort(&heapSort, heights, BARS);
 	// std::thread sort(&radixsort, heights, BARS);
+	std::thread sort(&shellSort, heights, BARS);
+	// std::thread sort(&bogosort, heights, BARS);
 
 	sf::Event event;
 
