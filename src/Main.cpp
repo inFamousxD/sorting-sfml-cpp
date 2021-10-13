@@ -37,6 +37,10 @@ int shellSort(int* arr, int n);
 bool isSorted(int* a, int n);
 void shuffleBogoSort(int* a, int n);
 void bogosort(int* a, int n);
+void compAndSwap(int* a, int i, int j, int dir);
+void bitonicMerge(int* a, int low, int cnt, int dir);
+void bitonicSort(int* a, int low, int cnt, int dir);
+void bitonicSortInit(int* a, int N, int up);
 
 void swap(int* a, int i, int j)
 {
@@ -467,6 +471,45 @@ void bogosort(int* a, int n)
 		shuffleBogoSort(a, n);
 }
 
+// Bitonic Sort
+
+void compAndSwap(int* a, int i, int j, int dir)
+{
+	if (dir == (a[i] > a[j]))
+	{
+		swap(a, i, j);
+		usleep(SLEEP_HIGH);
+	}
+}
+
+void bitonicMerge(int* a, int low, int cnt, int dir)
+{
+	if (cnt > 1)
+	{
+		int k = cnt / 2;
+		for (int i = low; i < low + k; i++)
+			compAndSwap(a, i, i + k, dir);
+		bitonicMerge(a, low, k, dir);
+		bitonicMerge(a, low + k, k, dir);
+	}
+}
+
+void bitonicSort(int* a, int low, int cnt, int dir)
+{
+	if (cnt > 1)
+	{
+		int k = cnt / 2;
+		bitonicSort(a, low, k, 1);
+		bitonicSort(a, low + k, k, 0);
+		bitonicMerge(a, low, cnt, dir);
+	}
+}
+
+void bitonicSortInit(int* a, int N, int up)
+{
+	bitonicSort(a, 0, N, up);
+}
+
 void update(Bar* bars[], int* numbers, int numCount)
 {
 	for (int i = 0; i < numCount; ++i)
@@ -512,8 +555,9 @@ int main()
 	// std::thread sort(&oddEvenSort, heights, BARS);
 	// std::thread sort(&heapSort, heights, BARS);
 	// std::thread sort(&radixsort, heights, BARS);
-	std::thread sort(&shellSort, heights, BARS);
+	// std::thread sort(&shellSort, heights, BARS);
 	// std::thread sort(&bogosort, heights, BARS);
+	std::thread sort(&bitonicSortInit, heights, BARS, 0);
 
 	sf::Event event;
 
